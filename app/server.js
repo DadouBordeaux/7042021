@@ -1,29 +1,35 @@
 require("dotenv").config();
 
 var express = require("express");
-var app = express();
+const app = express();
 const path = require("path");
 const redis = require("redis");
 
-const client = redis.createClient({
+const clientSubscribe = redis.createClient({
   host: "aws-eu-west-1-portal.2.dblayer.com",
   port: 21285,
   password: process.env.REDIS_PASSWORD,
 });
 
-client.on("error", err => {
-  console.log("Error " + err);
+const clientPublish = redis.createClient({
+  host: "aws-eu-west-1-portal.2.dblayer.com",
+  port: 21285,
+  password: process.env.REDIS_PASSWORD,
 });
 
-client.set("student", "Laylaa", function (err, reply) {
-  console.log(reply);
+clientSubscribe.subscribe("user-notify");
+
+clientSubscribe.on("message", (channel, message) => {
+  console.log("Received data :" + message);
 });
 
-client.get("student", function (err, reply) {
-  console.log(reply);
-});
+app.get("/pub", function (req, res) {
+  const user = {
+    id: "123456",
+    name: "Davis",
+  };
 
-app.get("/", function (req, res) {
+  clientPublish.publish("user-notify", JSON.stringify(user));
   res.sendFile(path.join(__dirname + "/index.html"));
 });
 

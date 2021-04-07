@@ -21,5 +21,11 @@
         audio.play();
       }
     </script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      // Uncaught ReferenceError: io is not defined
+      var socket = io();
+    </script>
   </body>
 </html>

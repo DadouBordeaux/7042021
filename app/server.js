@@ -1,8 +1,12 @@
 require("dotenv").config();
 
-var express = require("express");
-const app = express();
+const express = require("express");
 const path = require("path");
+const app = express();
+const http = require("http");
+const server = http.createServer(app);
+const io = require("socket.io")(server);
+
 const { startPlayer, stopPlayer } = require("./publish.service");
 const { initRedisSubscribe } = require("./subscribe.service");
 
@@ -20,6 +24,10 @@ app.get("/start-player", (req, res) => {
 app.get("/stop-player", (req, res) => {
   stopPlayer();
   res.end();
+});
+
+io.on("connection", socket => {
+  console.log("a user connected");
 });
 
 app.listen(3000, function () {

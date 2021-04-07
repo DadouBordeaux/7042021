@@ -1,6 +1,19 @@
+require("dotenv").config();
+
 var express = require("express");
 var app = express();
 const path = require("path");
+const redis = require("redis");
+
+const client = redis.createClient({
+  host: "aws-eu-west-1-portal.2.dblayer.com",
+  port: 21285,
+  password: process.env.REDIS_PASSWORD,
+});
+
+client.on("error", err => {
+  console.log("Error " + err);
+});
 
 app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname + "/index.html"));

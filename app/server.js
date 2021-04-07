@@ -15,6 +15,14 @@ client.on("error", err => {
   console.log("Error " + err);
 });
 
+client.set("student", "Laylaa", function (err, reply) {
+  console.log(reply);
+});
+
+client.get("student", function (err, reply) {
+  console.log(reply);
+});
+
 app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname + "/index.html"));
 });

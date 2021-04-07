@@ -17,20 +17,31 @@ const clientPublish = redis.createClient({
   password: process.env.REDIS_PASSWORD,
 });
 
-clientSubscribe.subscribe("user-notify");
+clientSubscribe.subscribe("start-player");
+clientSubscribe.subscribe("stop-player");
 
 clientSubscribe.on("message", (channel, message) => {
-  console.log("Received data :" + message);
+  if (channel === "start-player") {
+    console.log("start player !");
+  }
+
+  if (channel === "stop-player") {
+    console.log("stop player !");
+  }
 });
 
-app.get("/pub", function (req, res) {
-  const user = {
-    id: "123456",
-    name: "Davis",
-  };
-
-  clientPublish.publish("user-notify", JSON.stringify(user));
+app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname + "/index.html"));
+});
+
+app.get("/start-player", (req, res) => {
+  clientPublish.publish("start-player", "");
+  res.end();
+});
+
+app.get("/stop-player", (req, res) => {
+  clientPublish.publish("stop-player", "");
+  res.end();
 });
 
 app.listen(3000, function () {

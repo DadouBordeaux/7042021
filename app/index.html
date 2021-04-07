@@ -8,6 +8,8 @@
   </head>
   <body>
     <button onclick="playMusic()">click me to hear music</button>
+    <button onclick="startPlayer()">Start player with redis</button>
+    <button onclick="stopPlayer()">Stop player with redis</button>
 
     <script>
       var musicPath =
@@ -19,6 +21,18 @@
       function playMusic() {
         var audio = new Audio(musicPath);
         audio.play();
+      }
+    </script>
+
+    <script>
+      // Script to send requet start listen to music
+
+      function startPlayer() {
+        fetch("/start-player");
+      }
+
+      function stopPlayer() {
+        fetch("/stop-player");
       }
     </script>
 
